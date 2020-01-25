@@ -58,7 +58,6 @@ class WDS_CMB2_Attached_Posts_Field {
 	 * attached to a single page
 	 */
 	public function render( $field, $escaped_value, $object_id, $object_type, $field_type ) {
-		var_dump($field);
 		self::setup_scripts();
 		$this->field = $field;
 		$this->do_type_label = false;
@@ -74,48 +73,12 @@ class WDS_CMB2_Attached_Posts_Field {
 		}
 
 		$query_args = (array) $this->field->options( 'query_args' );
-		// var_dump($query_args);
 		$query_users = $this->field->options( 'query_users' );
-		// var_dump($query_users);
 
-		//変数格納
-		$query_sites = $this->field->options( 'query_sites' );
-		// var_dump($query_sites); exit;
-
-		//やっぱ1個ずつ回るんだね。
-		//ということは、
-		//query_users = false
-		//query_sites = true
-
-		// if( ! $query_users ){
-		// 	var_dump($query_users);
-		// 	var_dump("usersがfalse");
-		// }
-		// // exit;
-
-		//このshopの画面では
-
-		//どっちもture
-		// $query_users = true
-		// $query_sites = true
-
-		// //片方true
-		// $query_users = false
-		// $query_sites = true
-
-		// //片方true
-		// $query_users = true
-		// $query_sites = false
-
-		// //! $query_users && ! $query_sites
-		// $query_users = false
-		// $query_sites = false
-
-		//$query_usersがfalseではない
-		//もしくは$query_sitesがfalseではない。
-
-		//判定を追加 ここは別にいいのか
+		//分岐①
+		//ここは分岐。postとしての分岐
 		if ( ! $query_users ) {
+
 			// Setup our args
 			$args = wp_parse_args( $query_args, array(
 				'post_type'      => 'post',
@@ -149,19 +112,13 @@ class WDS_CMB2_Attached_Posts_Field {
 
 			$post_type_labels = implode( '/', $post_type_labels );
 
-		} else { 
+		} else { //ユーザー
 			// Setup our args
 			$args = wp_parse_args( $query_args, array(
 				'number' => 100,
 			) );
 			$post_type_labels = $field_type->_text( 'users_text', esc_html__( 'Users' ) );
 		}
-
-		if($query_sites){
-			$post_type_labels = "brands";
-		}
-
-
 
 		$filter_boxes = '';
 		// Check 'filter' setting
@@ -172,6 +129,7 @@ class WDS_CMB2_Attached_Posts_Field {
 		// Check to see if we have any meta values saved yet
 		$attached = (array) $escaped_value;
 
+		// ここなんかしてる。要調査
 		$objects = $this->get_all_objects( $args, $attached );
 
 		// If there are no posts found, just stop
@@ -180,13 +138,16 @@ class WDS_CMB2_Attached_Posts_Field {
 		}
 
 		// Wrap our lists
+		// ここ左右の1つのボックス全体のwrap
 		echo '<div class="attached-posts-wrap widefat" data-fieldname="'. $field_type->_name() .'">';
 
 		// Open our retrieved, or found posts, list
 		echo '<div class="retrieved-wrap column-wrap">';
+		// ここ見出し
 		echo '<h4 class="attached-posts-section">' . sprintf( __( 'Available %s', 'cmb' ), $post_type_labels ) . '</h4>';
 
 		// Set .has_thumbnail
+		// ここなんかしてる要調査
 		$has_thumbnail = $this->field->options( 'show_thumbnails' ) ? ' has-thumbnails' : '';
 		$hide_selected = $this->field->options( 'hide_selected' ) ? ' hide-selected' : '';
 
@@ -194,32 +155,24 @@ class WDS_CMB2_Attached_Posts_Field {
 			printf( $filter_boxes, 'available-search' );
 		}
 
+		// ulの全体
 		echo '<ul class="retrieved connected' . $has_thumbnail . $hide_selected . '">';
 
 		// Loop through our posts as list items
-		// $this->display_retrieved( $objects, $attached );
-
-		if($query_sites){
-			//サイト情報
-			$objects = $this->getAllSites();
-			//attachedの値
-			// $attached = $this->
-		}
-		// var_dump($objects); exit;
-
-		//query_sites以外ここ通る
-		if( ! $query_sites ){
-			$this->display_retrieved( $objects, $attached );
-		} else {
-			$this->sites_display_retrieved( $objects, $attached );
-		}
+		// ここなんかしてる要調査
+		// たぶん li 要素
+		$this->display_retrieved( $objects, $attached );
 
 		// Close our retrieved, or found, posts
 		echo '</ul><!-- .retrieved -->';
 
 		// @todo make User search work.
-		if ( ! $query_users) {
+		//分岐②
+		// ここユーザー以外
+		// 検索ボタン生成
+		if ( ! $query_users ) {
 			$findtxt = $field_type->_text( 'find_text', __( 'Search' ) );
+			// var_dump($findtxt); exit;
 
 			$js_data = json_encode( array(
 				'queryUsers' => $query_users,
@@ -231,6 +184,7 @@ class WDS_CMB2_Attached_Posts_Field {
 				'fieldId'    => $this->field->_id(),
 				'exclude'    => isset( $args['post__not_in'] ) ? $args['post__not_in'] : array(),
 			) );
+			// var_dump($js_data); exit;
 
 			echo '<p><button type="button" class="button cmb2-attached-posts-search-button" data-search=\''. $js_data .'\'>'. $findtxt .' <span title="'. esc_attr( $findtxt ) .'" class="dashicons dashicons-search"></span></button></p>';
 		}
@@ -238,6 +192,7 @@ class WDS_CMB2_Attached_Posts_Field {
 		echo '</div><!-- .retrieved-wrap -->';
 
 		// Open our attached posts list
+		// 右側
 		echo '<div class="attached-wrap column-wrap">';
 		echo '<h4 class="attached-posts-section">' . sprintf( __( 'Attached %s', 'cmb' ), $post_type_labels ) . '</h4>';
 
@@ -245,22 +200,20 @@ class WDS_CMB2_Attached_Posts_Field {
 			printf( $filter_boxes, 'attached-search' );
 		}
 
+		//ここ中身
+		//ul
 		echo '<ul class="attached connected', $has_thumbnail ,'">';
 
 		// If we have any ids saved already, display them
-		// $ids = $this->display_attached( $attached );
-
-		//query_sites以外ここ通る
-		if( ! $query_sites ){
-			$ids = $this->display_attached( $attached );
-		} else {
-			$ids = $this->sites_display_attached( $attached );
-		}
+		// ここなんかしてる要調査
+		//li
+		$ids = $this->display_attached( $attached );
 
 		// Close up shop
 		echo '</ul><!-- #attached -->';
 		echo '</div><!-- .attached-wrap -->';
 
+		//ここ input するために必要なフィールド
 		echo $field_type->input( array(
 			'type'  => 'hidden',
 			'class' => 'attached-posts-ids',
@@ -271,7 +224,8 @@ class WDS_CMB2_Attached_Posts_Field {
 		echo '</div><!-- .attached-posts-wrap -->';
 
 		// Display our description if one exists
-		$field_type->_desc( true, true );
+
+		// $field_type->_desc( true, true );
 	}
 
 	/**
@@ -324,9 +278,7 @@ class WDS_CMB2_Attached_Posts_Field {
 		// Loop through and build our existing display items
 		foreach ( $attached as $id ) {
 			$object = $this->get_object( $id );
-			var_dump($object);
 			$id     = $this->get_id( $object );
-			var_dump($id);
 
 			if ( empty( $object ) ) {
 				continue;
@@ -594,7 +546,6 @@ class WDS_CMB2_Attached_Posts_Field {
 	 *
 	 * @since  1.2.4
 	 *
-
 	 * @return void
 	 */
 	public function ajax_find_posts() {
@@ -768,112 +719,6 @@ class WDS_CMB2_Attached_Posts_Field {
 		}
 
 		return $return;
-	}
-
-	//全てのサイトを取得して、IDとnameを返却
-	public function getAllSites(){
-
-		//全サイトのIDを取得
-		$sites = get_sites();
-
-		$site_id_array = [];
-		foreach($sites as $site){
-			switch_to_blog($site->blog_id);
-			$siteInfo = get_option('blogname');
-			$rawData["ID"] = $site->blog_id;
-			$rawData["blog_name"] = $siteInfo;
-			$site_id_array[] = (object) $rawData;
-			restore_current_blog();
-		}
-		return $site_id_array;
-	}
-
-	public function getSitesInfo($id){
-		$siteInfo = [];
-		
-		switch_to_blog($id);
-		$blogname = get_option('blogname');
-		$rawData["ID"] = $id;
-		$rawData["blog_name"] = $blogname;
-		$siteInfo = (object) $rawData;
-		restore_current_blog();
-
-		return $siteInfo;
-	}
-
-	//query_sites専用の表示メソッド
-	public function sites_display_retrieved($objects, $attached){
-		$count = 0;
-
-		// Loop through our posts as list items
-		foreach ( $objects as $object ) {
-
-			// Set our zebra stripes
-			$class = ++$count % 2 == 0 ? 'even' : 'odd';
-
-			// Set a class if our post is in our attached meta
-			$class .= ! empty ( $attached ) && in_array( $object->ID, $attached ) ? ' added' : '';
-
-			// var_dump($class);
-			$this->sites_list_item( $object, $class );
-		}
-	}
-
-	public function sites_display_attached($attached){
-		$ids = array();
-
-		// Remove any empty values
-		$attached = array_filter( $attached );
-
-		if ( empty( $attached ) ) {
-			return $ids;
-		}
-
-		$count = 0;
-
-		// Loop through and build our existing display items
-		foreach ( $attached as $id ) {
-			// var_dump($id); exit;
-
-			$object = $this->getSitesInfo( $id );
-			$id     = $object->ID;
-			// var_dump($object); exit;
-
-			if ( empty( $object ) ) {
-				continue;
-			}
-
-			// Set our zebra stripes
-			$class = ++$count % 2 == 0 ? 'even' : 'odd';
-
-			$this->sites_list_item( $object, $class, 'dashicons-minus' );
-			$ids[ $id ] = $id;
-		}
-
-		return $ids;
-	}
-
-	//query_sitesのli要素作成メソッド
-	public function sites_list_item( $object, $li_class, $icon_class = 'dashicons-plus' ){
-		// Build our list item
-		printf(
-			'<li data-id="%1$d" class="%2$s" target="_blank"><a title="' . __( 'Edit' ) . '" href="">%3$s</a><span class="dashicons %4$s add-remove"></span></li>',
-			$object->ID,
-			$li_class,
-			$object->blog_name,
-			$icon_class
-		);
-
-		// printf(
-		// 	'<li data-id="%1$d" class="%2$s" target="_blank">%3$s<a title="' . __( 'Edit' ) . '" href="%4$s">%5$s</a>%6$s<span class="dashicons %7$s add-remove"></span></li>',
-		// 	$this->get_id( $object ),
-		// 	$li_class,
-		// 	$this->get_thumb( $object ),
-		// 	$this->get_edit_link( $object ),
-		// 	$this->get_title( $object ),
-		// 	$this->get_object_label( $object ),
-		// 	$icon_class
-		// );
 	}
 }
 WDS_CMB2_Attached_Posts_Field::get_instance();

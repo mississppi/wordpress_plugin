@@ -137,6 +137,8 @@ class ACF_Data {
 	 * @return	mixed
 	 */
 	function get( $name = false ) {
+		
+		// Get all.
 		if( $name === false ) {
 			return $this->data;
 		
@@ -175,8 +177,7 @@ class ACF_Data {
 	 * @return	ACF_Data
 	 */
 	function set( $name = '', $value = null ) {
-		// var_dump($name, $value); exit;
-		// var_dump($value);
+		
 		// Set multiple.
 		if( is_array($name) ) {
 			$this->data = array_merge($this->data, $name);
@@ -185,6 +186,7 @@ class ACF_Data {
 		} else {
 			$this->data[ $name ] = $value;
 		}
+		
 		// Return this for chaining.
 		return $this;
 	}
@@ -288,18 +290,15 @@ class ACF_Data {
 	 */
 	function alias( $name = '' /*, $alias, $alias2, etc */ ) {
 		
-		// var_dump($this); exit;
 		// Get all aliases.
 		$args = func_get_args();
 		array_shift( $args );
-		// var_dump($args); exit;
 		
 		// Loop over aliases and add to data.
 		foreach( $args as $alias ) {
 			$this->aliases[ $alias ] = $name;
 		}
 		
-		// var_dump($this); exit;
 		// Return this for chaining.
 		return $this;
 	}

@@ -1,16 +1,16 @@
 <?php
 /*
-Plugin Name: sangbag
+Plugin Name: custom_slug
 Plugin URI: http://www.example.com/plugin
-Description: sangbag
+Description: custom_slug
 Author: mississppi
 Version: 0.1
 Author URI: http://www.example.com
 */
-class sandbagInit
+class CustomSlugInit
 {
     public function __construct(){
         include_once("SettingSlug.php"); 
     }
 }
-new sandbagInit();
+new CustomSlugInit();

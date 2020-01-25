@@ -65,9 +65,9 @@ function acf_is_local_enabled() {
  * @return	ACF_Data
  */
 function acf_get_local_store( $name = '' ) {
-
+	
 	// Check if enabled.
-	if( acf_is_local_enabled() ) { //ここ
+	if( acf_is_local_enabled() ) {
 		return acf_get_store( "local-$name" );
 	
 	// Return dummy store if not enabled.
@@ -149,7 +149,8 @@ function acf_count_local_field_groups() {
  * @return	void
  */
 function acf_add_local_field_group( $field_group ) {
-
+	
+	// Validate field group.
 	$field_group = acf_get_valid_field_group( $field_group );
 	
 	// Bail early if field group already exists.
@@ -159,28 +160,26 @@ function acf_add_local_field_group( $field_group ) {
 	
 	// Extract fields from group.
 	$fields = acf_extract_var( $field_group, 'fields' );
-
-
+	
 	// Add local reference (may be set to "json").
 	if( empty($field_group['local']) ) {
 		$field_group['local'] = 'php';
 	}
 	
 	// Add to store
-	// var_dump($field_group); exit;
 	acf_get_local_store( 'groups' )->set( $field_group['key'], $field_group );
 	
 	// Add fields
-	// if( $fields ) {
+	if( $fields ) {
 		
-	// 	// Add parent reference
-	// 	foreach( $fields as $i => $field ) {
-	// 		$fields[ $i ]['parent'] = $field_group['key'];
-	// 	}
+		// Add parent reference
+		foreach( $fields as $i => $field ) {
+			$fields[ $i ]['parent'] = $field_group['key'];
+		}
 		
-	// 	// Add fields.
-	// 	acf_add_local_fields( $fields );
-	// }
+		// Add fields.
+		acf_add_local_fields( $fields );
+	}
 }
 
 /**
@@ -270,10 +269,10 @@ function acf_get_local_field_group( $key = '' ) {
  * @return	array
  */
 function acf_add_local_fields( $fields = array() ) {
+	
 	// Prepare for import (allows parent fields to offer up children).
 	$fields = acf_prepare_fields_for_import( $fields );
 	
-	// var_dump($fields); exit;
 	// Add each field.
 	foreach( $fields as $field ) {
 		acf_add_local_field( $field, true );
@@ -348,6 +347,7 @@ function acf_count_local_fields( $parent = '' ) {
  * @return	void
  */
 function acf_add_local_field( $field, $prepared = false ) {
+	
 	// Apply default args needed for import.
 	$field = wp_parse_args($field, array(
 		'key'		=> '',
@@ -374,12 +374,9 @@ function acf_add_local_field( $field, $prepared = false ) {
 	// Extract attributes.
 	$key = $field['key'];
 	$name = $field['name'];
-
-	// var_dump($key); exit;
 	
 	// Allow sub field to be added multipel times to different parents.
 	$store = acf_get_local_store( 'fields' );
-
 	if( $store->is($key) ) {
 		$old_key = _acf_generate_local_key( $store->get($key) );
 		$new_key = _acf_generate_local_key( $field );
@@ -387,6 +384,7 @@ function acf_add_local_field( $field, $prepared = false ) {
 			$key = $new_key;
 		}
 	}
+	
 	// Add field.
 	$store->set( $key, $field )->alias( $key, $name );
 }
