@@ -155,6 +155,8 @@ class WDS_CMB2_Attached_Posts_Field {
 			printf( $filter_boxes, 'available-search' );
 		}
 
+		echo '<input type="button" class="attached-posts-select-button button button-primary" value="全選択" >';
+
 		// ulの全体
 		echo '<ul class="retrieved connected' . $has_thumbnail . $hide_selected . '">';
 
@@ -199,6 +201,9 @@ class WDS_CMB2_Attached_Posts_Field {
 		if ( $filter_boxes ) {
 			printf( $filter_boxes, 'attached-search' );
 		}
+
+		echo '<input type="button" class="attached-posts-remove-button button button-primary" value="全選択解除" >';
+
 
 		//ここ中身
 		//ul
