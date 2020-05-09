@@ -712,11 +712,14 @@ class CMB2_Field extends CMB2_Base {
 	 */
 	public function escaped_value( $func = 'esc_attr', $meta_value = '' ) {
 
+		// var_dump($this); exit;
 		if ( null !== $this->escaped_value ) {
 			return $this->escaped_value;
 		}
+		// var_dump("kowwai"); exit;
 
 		$meta_value = $meta_value ? $meta_value : $this->value();
+		// var_dump($meta_value); exit;
 
 		// Check if the field has a registered escaping callback.
 		if ( $cb = $this->maybe_callback( 'escape_cb' ) ) {
@@ -740,8 +743,13 @@ class CMB2_Field extends CMB2_Base {
 		 * @param array      $field_args The current field's arguments.
 		 * @param object     $field      This `CMB2_Field` object.
 		 */
+
+		// var_dump($this->value); exit;
 		$esc = apply_filters( "cmb2_types_esc_{$field_type}", null, $meta_value, $this->args(), $this );
+		// var_dump($esc); exit;
+
 		if ( null !== $esc ) {
+			// var_dump("5"); exit;
 			return $esc;
 		}
 
@@ -763,6 +771,7 @@ class CMB2_Field extends CMB2_Base {
 		}
 
 		$this->escaped_value = $meta_value;
+		// var_dump($this->escaped_value); exit;
 		return $this->escaped_value;
 	}
 

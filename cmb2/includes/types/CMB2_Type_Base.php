@@ -93,7 +93,10 @@ abstract class CMB2_Type_Base {
 	 * @return array                  Parsed and filtered arguments
 	 */
 	public function parse_args( $element, $type_defaults, $type_overrides = array() ) {
+
+		// var_dump($type_defaults); exit;
 		$args = $this->parse_args_from_overrides( $type_overrides );
+		// var_dump($args); exit;
 
 		/**
 		 * Filter attributes for a field type.
@@ -106,8 +109,10 @@ abstract class CMB2_Type_Base {
 		 * @param object $field_type_object This `CMB2_Types` object.
 		 */
 		$args = apply_filters( "cmb2_{$element}_attributes", $args, $type_defaults, $this->field, $this->types );
-
+		// var_dump($args); exit;
+		// $args["rendered"] = false;
 		$args = wp_parse_args( $args, $type_defaults );
+		// var_dump($args); exit;
 
 		if ( ! empty( $args['js_dependencies'] ) ) {
 			$this->field->add_js_dependencies( $args['js_dependencies'] );

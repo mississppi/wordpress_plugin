@@ -1457,6 +1457,7 @@ class CMB2 extends CMB2_Base {
 	 * @return string|false    Field id or false.
 	 */
 	public function add_field( array $field, $position = 0 ) {
+
 		if ( ! array_key_exists( 'id', $field ) ) {
 			return false;
 		}
@@ -1486,6 +1487,7 @@ class CMB2 extends CMB2_Base {
 				add_action( 'admin_enqueue_scripts', array( 'CMB2_Type_Colorpicker', 'dequeue_rgba_colorpicker_script' ), 99 );
 				break;
 		}
+		// var_dump($field); exit;
 
 		if ( isset( $field['column'] ) && false !== $field['column'] ) {
 			$field = $this->define_field_column( $field );
@@ -1500,6 +1502,7 @@ class CMB2 extends CMB2_Base {
 			$this->meta_box['fields'],
 			$position
 		);
+		// var_dump($field); exit;
 
 		return $field['id'];
 	}

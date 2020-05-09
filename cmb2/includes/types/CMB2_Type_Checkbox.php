@@ -39,19 +39,33 @@ class CMB2_Type_Checkbox extends CMB2_Type_Text {
 			'value' => 'on',
 			'desc'  => '',
 		);
+		// var_dump($this); exit;
 
 		$meta_value = $this->field->escaped_value();
+		// var_dump(!empty($meta_value)); exit;
+		// var_dump($is_checked); exit;
+		// $meta_value = null;
 
-		$is_checked = null === $this->is_checked
-			? ! empty( $meta_value )
-			: $this->is_checked;
+		//nullと$this->is_checkedが等しいか
+		//等しいなら、$meta_valueのemptyかどうか、!だから逆だけど
+		//この逆の値を入れる
+		//offなので、$meta_valueもしかして,,,,
+		//offなので、trueが入ってしまう
+		//$meta_value に nullを入れるとoffになるが、こんどはずっとoffになる
+		$is_checked = null === $this->is_checked ? ! empty( $meta_value ) : $this->is_checked;
 
+		// $is_checked = null;
+		// var_dump($is_checked); exit;
 		if ( $is_checked ) {
 			$defaults['checked'] = 'checked';
 		}
+		// var_dump($this); exit;
+
 
 		$args = $this->parse_args( 'checkbox', $defaults );
 
+		// var_dump($args); exit;
+		// $args["value"] = off;
 		return $this->rendered(
 			sprintf(
 				'%s <label for="%s">%s</label>',

@@ -40,7 +40,10 @@ class CMB2_Type_Text extends CMB2_Type_Base {
 	 * @return string       Form input element
 	 */
 	public function render( $args = array() ) {
+		// var_dump($args); exit;
 		$args = empty( $args ) ? $this->args : $args;
+		// var_dump($args); exit;
+
 		$a = $this->parse_args( $this->type, array(
 			'type'            => 'text',
 			'class'           => 'regular-text',
@@ -50,6 +53,7 @@ class CMB2_Type_Text extends CMB2_Type_Base {
 			'desc'            => $this->_desc( true ),
 			'js_dependencies' => array(),
 		), $args );
+		// var_dump($a);
 
 		return $this->rendered(
 			sprintf( '<input%s/>%s', $this->concat_attrs( $a, array( 'desc' ) ), $a['desc'] )

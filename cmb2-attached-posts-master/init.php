@@ -58,6 +58,7 @@ class WDS_CMB2_Attached_Posts_Field {
 	 * attached to a single page
 	 */
 	public function render( $field, $escaped_value, $object_id, $object_type, $field_type ) {
+		// var_dump("hoge"); exit;
 		self::setup_scripts();
 		$this->field = $field;
 		$this->do_type_label = false;
