@@ -11,9 +11,16 @@ class RemoveMenu
         //removeforleftnavimenu
         add_action( 'admin_menu', [$this,'remove_admin_menu'], 999 );
 
+        add_action( 'admin_head', [$this, 'hide_help_and_options']);
+
     }
 
-
+    public function hide_help_and_options(){
+        echo '<style type="text/css">'.
+            '#contextual-help-link-wrap,'.
+            '#screen-options-link-wrap'.
+            '{display:none;}</style>'.PHP_EOL;
+    }
 
     public function remove_topbanner_menus($wp_admin_bar){
         $wp_admin_bar->remove_menu( 'wp-logo' );      // logo
