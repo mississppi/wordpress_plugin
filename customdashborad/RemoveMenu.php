@@ -11,6 +11,7 @@ class RemoveMenu
         //removeforleftnavimenu
         add_action( 'admin_menu', [$this,'remove_admin_menu'], 999 );
 
+        //removefortophelpbutton
         add_action( 'admin_head', [$this, 'hide_help_and_options']);
 
     }
