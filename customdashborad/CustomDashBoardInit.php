@@ -12,6 +12,7 @@ class CustomDashBoardInit
 {
     public function __construct(){
         include_once("RemoveMenu.php");
+        include_once("CustomImporterPage.php");
 
     }
 }
