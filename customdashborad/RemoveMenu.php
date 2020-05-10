@@ -60,11 +60,16 @@ class RemoveMenu
         // remove_menu_page( 'tools.php' );                // tools
         // remove_menu_page( 'options-general.php' );      // setting
 
+        //removesubmenu for tools
+        remove_submenu_page( 'tools.php', 'export_personal_data'); // tools - export_personal
+        remove_submenu_page( 'tools.php', 'remove_personal_data'); // tools - remove_personal
+        remove_submenu_page( 'tools.php', 'site-health.php'); // tools - site-health
+        remove_submenu_page( 'tools.php', 'tools.php'); // tools - tools
 
         //removesubmenu for options
         remove_submenu_page( 'options-general.php', 'options-discussion.php'); // options - discussion
         remove_submenu_page( 'options-general.php', 'options-writing.php'); // options - writing
-        remove_submenu_page( 'options-general.php', 'options-permalink.php'); // options - permalink
+        // remove_submenu_page( 'options-general.php', 'options-permalink.php'); // options - permalink
         remove_submenu_page( 'options-general.php', 'options-reading.php'); // options - reading
         remove_submenu_page( 'options-general.php', 'options-media.php'); // options - media
         remove_submenu_page( 'options-general.php', 'privacy.php'); // options - privacy
