@@ -47,6 +47,8 @@ class RemoveMenu
     }
 
     public function remove_admin_menu(){
+        global $menu;
+        global $submenu;
         // remove_menu_page( 'index.php' );                // dashboard
         remove_menu_page( 'edit.php' );                 // post
         remove_menu_page( 'upload.php' );               // media
@@ -57,6 +59,17 @@ class RemoveMenu
         // remove_menu_page( 'users.php' );                // users
         // remove_menu_page( 'tools.php' );                // tools
         // remove_menu_page( 'options-general.php' );      // setting
+
+
+        //removesubmenu for options
+        remove_submenu_page( 'options-general.php', 'options-discussion.php'); // options - discussion
+        remove_submenu_page( 'options-general.php', 'options-writing.php'); // options - writing
+        remove_submenu_page( 'options-general.php', 'options-permalink.php'); // options - permalink
+        remove_submenu_page( 'options-general.php', 'options-reading.php'); // options - reading
+        remove_submenu_page( 'options-general.php', 'options-media.php'); // options - media
+        remove_submenu_page( 'options-general.php', 'privacy.php'); // options - privacy
+
+
     }
 
 
